@@ -1,2 +1,2 @@
 # MassTransit.MongoDb
-MongoDb message data repository implementation for MassTransit
+MongoDb message repository implementation for MassTransit
