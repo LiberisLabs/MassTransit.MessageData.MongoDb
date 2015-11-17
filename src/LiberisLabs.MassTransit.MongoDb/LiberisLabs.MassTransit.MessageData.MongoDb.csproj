@@ -69,11 +69,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMongoMessageDataUriBuilder.cs" />
-    <Compile Include="IMongoMessageUriBuilder.cs" />
     <Compile Include="MongoMessageDataRepository.cs" />
-    <Compile Include="MongoMessageUriBuilder.cs" />
-    <Compile Include="MongoMessageUriConvertor.cs" />
-    <Compile Include="MongoMessageUriFormatter.cs" />
+    <Compile Include="MongoMessageUriResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

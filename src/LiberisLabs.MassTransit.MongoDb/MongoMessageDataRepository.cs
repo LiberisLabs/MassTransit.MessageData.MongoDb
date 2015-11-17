@@ -10,21 +10,18 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb
 {
     public class MongoMessageDataRepository : IMessageDataRepository
     {
-        private readonly IMongoMessageUriConvertor _mongoMessageUriConvertor;
-        private readonly IMongoMessageUriBuilder _mongoMessageUriBuilder;
+        private readonly IMongoMessageUriResolver _mongoMessageUriResolver;
         private readonly IGridFSBucket _gridFsBucket;
 
-        public MongoMessageDataRepository(IMongoMessageUriConvertor mongoMessageUriConvertor, IMongoMessageUriBuilder mongoMessageUriBuilder,
-                                          IGridFSBucket gridFsBucket)
+        public MongoMessageDataRepository(IMongoMessageUriResolver mongoMessageUriResolver, IGridFSBucket gridFsBucket)
         {
-            _mongoMessageUriConvertor = mongoMessageUriConvertor;
-            _mongoMessageUriBuilder = mongoMessageUriBuilder;
+            _mongoMessageUriResolver = mongoMessageUriResolver;
             _gridFsBucket = gridFsBucket;
         }
 
         public async Task<Stream> Get(Uri address, CancellationToken cancellationToken = new CancellationToken())
         {
-            var id = _mongoMessageUriConvertor.Build(address);
+            var id = _mongoMessageUriResolver.Resolve(address);
 
             return await _gridFsBucket.OpenDownloadStreamAsync(id, cancellationToken: cancellationToken);
         }
@@ -35,7 +32,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb
 
             var id = await _gridFsBucket.UploadFromStreamAsync(Path.GetRandomFileName(), stream, options, cancellationToken);
 
-            return _mongoMessageUriBuilder.Build(id);
+            return _mongoMessageUriResolver.Resolve(id);
         }
 
         private GridFSUploadOptions BuildGridFSUploadOptions(TimeSpan? timeToLive)

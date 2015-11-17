@@ -3,10 +3,10 @@ using MongoDB.Bson;
 
 namespace LiberisLabs.MassTransit.MessageData.MongoDb
 {
-    public interface IMongoMessageUriConvertor
+    public interface IMongoMessageUriResolver
     {
-        ObjectId Build(Uri uri);
+        ObjectId Resolve(Uri uri);
 
-        Uri Build(ObjectId id);
+        Uri Resolve(ObjectId id);
     }
 }
