@@ -6,7 +6,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb
     {
         public string Format(string format, object arg, IFormatProvider formatProvider)
         {
-            return String.Format($"urn:mongodb:gridfs:{arg}", arg);
+            return string.Format($"urn:mongodb:gridfs:{arg}", arg);
         }
 
         public object GetFormat(Type formatType)

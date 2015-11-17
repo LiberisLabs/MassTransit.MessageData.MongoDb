@@ -13,7 +13,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb
             var tokens = uri.AbsolutePath.Split(':');
 
             if (tokens.Length != 3 || !uri.AbsolutePath.StartsWith("mongodb:gridfs:"))
-                throw new UriFormatException("Urn is not in the correct format. Use urn:mongodb:gridfs:{objectId}");
+                throw new UriFormatException("Urn is not in the correct format. Use 'urn:mongodb:gridfs:{objectId}'");
 
             return ObjectId.Parse(tokens[2]);
         }

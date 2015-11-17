@@ -7,7 +7,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb
     {
         public Uri Build(ObjectId id)
         {
-            return new Uri(String.Format(new MongoMessageUriFormatter(), "{0}", id));
+            return new Uri(string.Format(new MongoMessageUriFormatter(), "{0}", id));
         }
     }
 }
