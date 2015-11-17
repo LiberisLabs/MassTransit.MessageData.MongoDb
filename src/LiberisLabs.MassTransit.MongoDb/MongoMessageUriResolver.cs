@@ -8,7 +8,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb
         private const string _scheme = "urn";
         private const string _system = "mongodb";
         private const string _specification = "gridfs";
-        private readonly string _format = string.Join(":", _scheme, _system, _specification);
+        private readonly string _format = string.Join(":", _system, _specification);
 
         public ObjectId Resolve(Uri uri)
         {
@@ -17,7 +17,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb
 
             var tokens = uri.AbsolutePath.Split(':');
 
-            if (tokens.Length != 3 || !uri.AbsolutePath.StartsWith(_format))
+            if (tokens.Length != 3 || !uri.AbsoluteUri.StartsWith($"{_format}:"))
                 throw new UriFormatException($"Urn is not in the correct format. Use '{_format}:{{resourceId}}'");
 
             return ObjectId.Parse(tokens[2]);
@@ -25,7 +25,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb
 
         public Uri Resolve(ObjectId id)
         {
-            return new Uri($"{_format}:{id}");
+            return new Uri($"{_scheme}:{_format}:{id}");
         }
     }
 }
