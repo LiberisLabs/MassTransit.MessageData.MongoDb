@@ -80,7 +80,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MongoMessageDataRepositoryTests\MongoMessageDataRepositoryTestsForGettingMessageData - Copy.cs" />
+    <Compile Include="MongoMessageDataRepositoryTests\MongoMessageDataRepositoryTestsForPuttingMessageData.cs" />
     <Compile Include="MongoMessageDataRepositoryTests\MongoMessageDataRepositoryTestsForGettingMessageData.cs" />
     <Compile Include="MongoUriResolverTests\MongoUriResolverTestsForResolvingMalformedUris.cs" />
     <Compile Include="MongoUriResolverTests\MongoUriResolverTestsForResolvingObjectId.cs" />
