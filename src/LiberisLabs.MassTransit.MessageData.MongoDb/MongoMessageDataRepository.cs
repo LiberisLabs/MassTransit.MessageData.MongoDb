@@ -37,7 +37,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb
 
         private GridFSUploadOptions BuildGridFSUploadOptions(TimeSpan? timeToLive)
         {
-            if (timeToLive == null)
+            if (!timeToLive.HasValue)
                 return null;
 
             var metadata = new BsonDocument

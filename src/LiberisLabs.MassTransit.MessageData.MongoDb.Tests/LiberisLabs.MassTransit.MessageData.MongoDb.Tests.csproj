@@ -66,7 +66,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LiberisLabs.MassTransit.MongoDb\LiberisLabs.MassTransit.MessageData.MongoDb.csproj">
+    <ProjectReference Include="..\LiberisLabs.MassTransit.MessageData.MongoDb\LiberisLabs.MassTransit.MessageData.MongoDb.csproj">
       <Project>{dbdd60b9-59dd-4838-a6e6-c0660c6e3d0b}</Project>
       <Name>LiberisLabs.MassTransit.MessageData.MongoDb</Name>
     </ProjectReference>
