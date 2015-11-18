@@ -16,6 +16,8 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
         private GridFSBucket _bucket;
         private byte[] _expected;
         private ObjectId _id;
+        private Mock<IFileNameCreator> _nameCreator;
+        private Mock<IMongoMessageUriResolver> _resolver;
 
         [TestFixtureSetUp]
         public void GivenAMongoMessageDataRepository_WhenPuttingMessageData()
@@ -24,9 +26,11 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
             _bucket = new GridFSBucket(db);
             var fixture = new Fixture();
             _expected = fixture.Create<byte[]>();
-            var resolver = new Mock<IMongoMessageUriResolver>();
-            resolver.Setup(m => m.Resolve(It.IsAny<ObjectId>())).Returns((ObjectId x) => new Uri("urn:" + x));
-            var sut = new MongoMessageDataRepository(resolver.Object, _bucket);
+            _resolver = new Mock<IMongoMessageUriResolver>();
+            _resolver.Setup(m => m.Resolve(It.IsAny<ObjectId>())).Returns((ObjectId x) => new Uri("urn:" + x));
+            _nameCreator = new Mock<IFileNameCreator>();
+            _nameCreator.Setup(m => m.CreateFileName()).Returns(fixture.Create<string>());
+            var sut = new MongoMessageDataRepository(_resolver.Object, _bucket, _nameCreator.Object);
 
             using (var stream = new MemoryStream(_expected))
             {
@@ -34,7 +38,18 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
                 _id = new ObjectId(uri.AbsoluteUri.Split(':').Last());
             }
         }
-        
+
+        [Test]
+        public void ThenResolverCalled()
+        {
+            _resolver.Verify(m => m.Resolve(_id));
+        }
+
+        public void ThenNameCreatorCalled()
+        {
+            _nameCreator.Verify(m => m.CreateFileName());
+        }
+
         [Test]
         public async Task ThenMessageStoredAsExpected()
         {

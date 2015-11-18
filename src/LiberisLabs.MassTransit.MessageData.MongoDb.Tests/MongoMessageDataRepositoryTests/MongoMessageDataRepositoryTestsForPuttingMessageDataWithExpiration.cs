@@ -27,7 +27,9 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
             _expected = fixture.Create<byte[]>();
             var resolver = new Mock<IMongoMessageUriResolver>();
             resolver.Setup(m => m.Resolve(It.IsAny<ObjectId>())).Returns((ObjectId x) => new Uri("urn:" + x));
-            var sut = new MongoMessageDataRepository(resolver.Object, _bucket);
+            var nameCreator = new Mock<IFileNameCreator>();
+            nameCreator.Setup(m => m.CreateFileName()).Returns(fixture.Create<string>());
+            var sut = new MongoMessageDataRepository(resolver.Object, _bucket, nameCreator.Object);
             _expectedTtl = TimeSpan.FromHours(1);
 
             using (var stream = new MemoryStream(_expected))

@@ -15,6 +15,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
         private GridFSBucket _bucket;
         private Stream _result;
         private byte[] _expected;
+        private Mock<IMongoMessageUriResolver> _resolver;
 
         [TestFixtureSetUp]
         public void GivenAMongoMessageDataRepository_WhenGettingMessageData()
@@ -24,17 +25,20 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
             var fixture = new Fixture();
             _expected = fixture.Create<byte[]>();
             var objectId = SeedBucket(_expected).GetAwaiter().GetResult();
-            var resolver = new Mock<IMongoMessageUriResolver>();
-            resolver.Setup(m => m.Resolve(It.IsAny<Uri>())).Returns(objectId);
-            var sut = new MongoMessageDataRepository(resolver.Object, _bucket);
+            _resolver = new Mock<IMongoMessageUriResolver>();
+            _resolver.Setup(m => m.Resolve(It.IsAny<Uri>())).Returns(objectId);
+            var nameCreator = new Mock<IFileNameCreator>();
+            nameCreator.Setup(m => m.CreateFileName()).Returns(fixture.Create<string>());
+            var sut = new MongoMessageDataRepository(_resolver.Object, _bucket, nameCreator.Object);
             _result = sut.Get(It.IsAny<Uri>()).GetAwaiter().GetResult();
         }
 
-        private async Task<ObjectId> SeedBucket(byte[] seed)
+        [Test]
+        public void ThenResolverCalled()
         {
-            return await _bucket.UploadFromBytesAsync(Path.GetRandomFileName(), seed);
+            _resolver.Verify(m => m.Resolve(It.IsAny<Uri>()));
         }
-        
+
         [Test]
         public async Task ThenStreamReturnedAsExpected()
         {
@@ -47,6 +51,11 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
         public void Kill()
         {
             _bucket.DropAsync().GetAwaiter().GetResult();
+        }
+
+        private async Task<ObjectId> SeedBucket(byte[] seed)
+        {
+            return await _bucket.UploadFromBytesAsync(Path.GetRandomFileName(), seed);
         }
     }
 }
