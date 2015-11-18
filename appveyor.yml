@@ -29,7 +29,7 @@
     - C:\downloads -> appveyor.yml
    
    services:
-    - mongodb  
+    - mongodb
   
   test:
     assemblies:
@@ -78,7 +78,7 @@
     - C:\downloads -> appveyor.yml
    
   services:
-    - mongodb  
+    - mongodb
    
   test:
     assemblies:
