@@ -28,6 +28,9 @@
     - packages -> **\packages.config
     - C:\downloads -> appveyor.yml
    
+   services:
+    - mongodb  
+  
   test:
     assemblies:
       - '**\*.Tests.dll'
@@ -73,6 +76,9 @@
   cache:
     - packages -> **\packages.config
     - C:\downloads -> appveyor.yml
+   
+  services:
+    - mongodb  
    
   test:
     assemblies:
