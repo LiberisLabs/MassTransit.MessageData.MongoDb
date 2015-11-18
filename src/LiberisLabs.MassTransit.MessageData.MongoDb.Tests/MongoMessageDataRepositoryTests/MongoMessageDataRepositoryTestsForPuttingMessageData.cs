@@ -15,7 +15,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
     {
         private GridFSBucket _bucket;
         private byte[] _expected;
-        private ObjectId _id;
+        private ObjectId _resultId;
         private Mock<IFileNameCreator> _nameCreator;
         private Mock<IMongoMessageUriResolver> _resolver;
 
@@ -24,25 +24,29 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
         {
             var db = new MongoClient().GetDatabase("messagedatastoretests");
             _bucket = new GridFSBucket(db);
+
             var fixture = new Fixture();
             _expected = fixture.Create<byte[]>();
+
             _resolver = new Mock<IMongoMessageUriResolver>();
             _resolver.Setup(m => m.Resolve(It.IsAny<ObjectId>())).Returns((ObjectId x) => new Uri("urn:" + x));
+
             _nameCreator = new Mock<IFileNameCreator>();
             _nameCreator.Setup(m => m.CreateFileName()).Returns(fixture.Create<string>());
+
             var sut = new MongoMessageDataRepository(_resolver.Object, _bucket, _nameCreator.Object);
 
             using (var stream = new MemoryStream(_expected))
             {
                 var uri = sut.Put(stream).GetAwaiter().GetResult();
-                _id = new ObjectId(uri.AbsoluteUri.Split(':').Last());
+                _resultId = new ObjectId(uri.AbsoluteUri.Split(':').Last());
             }
         }
 
         [Test]
         public void ThenResolverCalled()
         {
-            _resolver.Verify(m => m.Resolve(_id));
+            _resolver.Verify(m => m.Resolve(_resultId));
         }
 
         public void ThenNameCreatorCalled()
@@ -53,7 +57,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
         [Test]
         public async Task ThenMessageStoredAsExpected()
         {
-            var result = await _bucket.DownloadAsBytesAsync(_id);
+            var result = await _bucket.DownloadAsBytesAsync(_resultId);
 
             Assert.That(result, Is.EqualTo(_expected));
         }

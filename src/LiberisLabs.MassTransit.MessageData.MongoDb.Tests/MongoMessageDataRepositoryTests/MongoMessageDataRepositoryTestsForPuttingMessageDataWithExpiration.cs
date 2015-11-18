@@ -15,7 +15,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
     {
         private GridFSBucket _bucket;
         private byte[] _expected;
-        private ObjectId _id;
+        private ObjectId _resultId;
         private TimeSpan _expectedTtl;
 
         [TestFixtureSetUp]
@@ -23,26 +23,30 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
         {
             var db = new MongoClient().GetDatabase("messagedatastoretests");
             _bucket = new GridFSBucket(db);
+
             var fixture = new Fixture();
             _expected = fixture.Create<byte[]>();
+
             var resolver = new Mock<IMongoMessageUriResolver>();
             resolver.Setup(m => m.Resolve(It.IsAny<ObjectId>())).Returns((ObjectId x) => new Uri("urn:" + x));
+
             var nameCreator = new Mock<IFileNameCreator>();
             nameCreator.Setup(m => m.CreateFileName()).Returns(fixture.Create<string>());
+
             var sut = new MongoMessageDataRepository(resolver.Object, _bucket, nameCreator.Object);
             _expectedTtl = TimeSpan.FromHours(1);
 
             using (var stream = new MemoryStream(_expected))
             {
                 var uri = sut.Put(stream, _expectedTtl).GetAwaiter().GetResult();
-                _id = new ObjectId(uri.AbsoluteUri.Split(':').Last());
+                _resultId = new ObjectId(uri.AbsoluteUri.Split(':').Last());
             }
         }
         
         [Test]
         public async Task ThenMessageStoredAsExpected()
         {
-            var result = await _bucket.DownloadAsBytesAsync(_id);
+            var result = await _bucket.DownloadAsBytesAsync(_resultId);
 
             Assert.That(result, Is.EqualTo(_expected));
         }
@@ -50,7 +54,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
         [Test]
         public async Task ThenExpirationSetAsExpected()
         {
-            var cursor = await _bucket.FindAsync(Builders<GridFSFileInfo>.Filter.Eq("_id", _id));
+            var cursor = await _bucket.FindAsync(Builders<GridFSFileInfo>.Filter.Eq("_id", _resultId));
             var list = await cursor.ToListAsync();
             var doc = list.Single();
 
