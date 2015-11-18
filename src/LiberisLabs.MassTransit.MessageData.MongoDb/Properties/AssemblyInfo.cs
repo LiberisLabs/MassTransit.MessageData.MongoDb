@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("LiberisLabs.MassTransit.MongoDb")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("MongoDb message repository implementation for MassTransit")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("LiberisLabs")]
 [assembly: AssemblyProduct("LiberisLabs.MassTransit.MongoDb")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
