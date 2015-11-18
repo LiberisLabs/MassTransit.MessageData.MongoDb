@@ -22,13 +22,17 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
         {
             var db = new MongoClient().GetDatabase("messagedatastoretests");
             _bucket = new GridFSBucket(db);
+
             var fixture = new Fixture();
             _expected = fixture.Create<byte[]>();
+
             var objectId = SeedBucket(_expected).GetAwaiter().GetResult();
             _resolver = new Mock<IMongoMessageUriResolver>();
             _resolver.Setup(m => m.Resolve(It.IsAny<Uri>())).Returns(objectId);
+
             var nameCreator = new Mock<IFileNameCreator>();
             nameCreator.Setup(m => m.CreateFileName()).Returns(fixture.Create<string>());
+
             var sut = new MongoMessageDataRepository(_resolver.Object, _bucket, nameCreator.Object);
             _result = sut.Get(It.IsAny<Uri>()).GetAwaiter().GetResult();
         }

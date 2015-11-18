@@ -1,9 +1,11 @@
 ﻿using System;
+using System.CodeDom;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using MassTransit.MessageData;
 using MongoDB.Bson;
+using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 
 namespace LiberisLabs.MassTransit.MessageData.MongoDb
@@ -13,6 +15,19 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb
         private readonly IMongoMessageUriResolver _mongoMessageUriResolver;
         private readonly IGridFSBucket _gridFsBucket;
         private readonly IFileNameCreator _randomFileNameCreator;
+
+        public MongoMessageDataRepository(string connectionString, string database)
+            :this(new MongoMessageUriResolver(), new GridFSBucket(new MongoClient(connectionString).GetDatabase(database)), new RandomFileNameCreator())
+        {
+            
+        }
+
+
+        public MongoMessageDataRepository(MongoUrl mongoUrl)
+            : this(mongoUrl.Url, mongoUrl.DatabaseName)
+        {
+
+        }
 
         public MongoMessageDataRepository(IMongoMessageUriResolver mongoMessageUriResolver, IGridFSBucket gridFsBucket, IFileNameCreator randomFileNameCreator)
         {
@@ -25,7 +40,12 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb
         {
             var id = _mongoMessageUriResolver.Resolve(address);
 
-            return await _gridFsBucket.OpenDownloadStreamAsync(id, cancellationToken: cancellationToken);
+            var memoryStream = new MemoryStream();
+            await _gridFsBucket.DownloadToStreamAsync(id, memoryStream, null , cancellationToken)
+                .ConfigureAwait(false);
+
+            memoryStream.Position = 0;
+            return memoryStream;
         }
 
         public async Task<Uri> Put(Stream stream, TimeSpan? timeToLive = null, CancellationToken cancellationToken = new CancellationToken())
