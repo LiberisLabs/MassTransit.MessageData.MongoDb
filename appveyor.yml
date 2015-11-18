@@ -28,7 +28,7 @@
     - packages -> **\packages.config
     - C:\downloads -> appveyor.yml
    
-   services:
+  services:
     - mongodb
   
   test:
