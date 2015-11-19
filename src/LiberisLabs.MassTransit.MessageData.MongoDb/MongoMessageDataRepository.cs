@@ -53,7 +53,8 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb
         {
             var options = BuildGridFSUploadOptions(timeToLive);
 
-            var id = await _gridFsBucket.UploadFromStreamAsync(_randomFileNameCreator.CreateFileName(), stream, options, cancellationToken);
+            var id = await _gridFsBucket.UploadFromStreamAsync(_randomFileNameCreator.CreateFileName(), stream, options, cancellationToken)
+                .ConfigureAwait(false);
 
             return _mongoMessageUriResolver.Resolve(id);
         }
