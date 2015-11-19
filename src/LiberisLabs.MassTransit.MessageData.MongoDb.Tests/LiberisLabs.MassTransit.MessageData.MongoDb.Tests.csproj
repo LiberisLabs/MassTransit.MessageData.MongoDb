@@ -87,6 +87,7 @@
     <Compile Include="MongoUriResolverTests\MongoUriResolverTestsForResolvingObjectId.cs" />
     <Compile Include="MongoUriResolverTests\MongoUriResolverTestsForResolvingUri.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomFileNameCreatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
