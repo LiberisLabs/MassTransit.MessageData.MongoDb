@@ -1,6 +1,6 @@
 # MassTransit.MessageData.MongoDb
 
-MongoDb message data repository implementation for MassTransit
+MongoDb message repository implementation for MassTransit
 
 [![install from nuget](http://img.shields.io/nuget/v/MassTransit.MessageData.MongoDb.svg?style=flat-square)](https://www.nuget.org/packages/MassTransit.MessageData.MongoDb)
 [![downloads](http://img.shields.io/nuget/dt/MassTransit.MessageData.MongoDb.svg?style=flat-square)](https://www.nuget.org/packages/MassTransit.MessageData.MongoDb)
