@@ -1,9 +1,9 @@
 # MassTransit.MongoDb
-This reposity contains intergrations for MassTransit V3 with MongoDB
+This repository contains integrations for MassTransit V3 with MongoDB
 
 [![Build status](https://ci.appveyor.com/api/projects/status/xxxryqtofg5k5d1s/branch/master?svg=true)](https://ci.appveyor.com/project/Liberis/masstransit-mongodb/branch/master)
 
-The intergrations so far:
+The integrations so far:
 
 ## MassTransit.MessageData.MongoDb
 
