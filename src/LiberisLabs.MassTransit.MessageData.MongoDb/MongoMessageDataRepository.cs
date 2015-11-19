@@ -59,13 +59,12 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb
 
         private GridFSUploadOptions BuildGridFSUploadOptions(TimeSpan? timeToLive)
         {
-            if (!timeToLive.HasValue)
-                return null;
+            var metadata = new BsonDocument();
 
-            var metadata = new BsonDocument
+            if (timeToLive.HasValue)
             {
-                {"expiration", DateTime.UtcNow.Add(timeToLive.Value)}
-            };
+                metadata["expiration"] = DateTime.UtcNow.Add(timeToLive.Value);
+            }
 
             return new GridFSUploadOptions
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -59,6 +60,16 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
             var result = await _bucket.DownloadAsBytesByNameAsync(_filename);
 
             Assert.That(result, Is.EqualTo(_expectedData));
+        }
+
+        [Test]
+        public async Task ThenExpirationIsNotSet()
+        {
+            var cursor = await _bucket.FindAsync(Builders<GridFSFileInfo>.Filter.Eq(x => x.Filename, _filename));
+            var list = await cursor.ToListAsync();
+            var doc = list.Single();
+
+            Assert.That(doc.Metadata.Contains("expiration"), Is.False);
         }
 
         [TestFixtureTearDown]
