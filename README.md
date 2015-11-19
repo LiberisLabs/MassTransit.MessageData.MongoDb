@@ -55,7 +55,7 @@ public class BigMessage
 
 ```
 
-When we create the message we need to call our `MongoMessageDataRepository` to put the big payload in to MongoDB, which in turn passes back a `MessageData<byte[]>`:
+When we create the message we need to call our `MongoMessageDataRepository` to put the big payload into MongoDB, which in turn passes back a `MessageData<byte[]>`:
 
 ```csharp
 var blob = new byte[] {111, 2, 234, 12, 99};
@@ -97,7 +97,7 @@ var busControl = MassTransit.Bus.Factory.CreateUsingInMemory(cfg =>
 
 ```
 
-Then with the magic wiring from MassTransit we can consume the message inside a consumer with the following:
+Then, with the magic wiring from MassTransit we can consume the message inside a consumer with the following:
 ```csharp
 
 public class BigMessageConsumer : IConsumer<BigMessage>
