@@ -16,10 +16,9 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
     public class MongoMessageDataRepositoryTestsForPuttingMessageDataWithExpiration
     {
         private GridFSBucket _bucket;
-        private byte[] _expected;
-        private ObjectId _resultId;
         private TimeSpan _expectedTtl;
         private DateTime _now;
+        private ObjectId _id;
 
         [TestFixtureSetUp]
         public void GivenAMongoMessageDataRepository_WhenPuttingMessageDataWithExpiration()
@@ -31,36 +30,28 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
             SystemDateTime.Set(_now);
 
             var fixture = new Fixture();
-            _expected = fixture.Create<byte[]>();
 
             var resolver = new Mock<IMongoMessageUriResolver>();
-            resolver.Setup(m => m.Resolve(It.IsAny<ObjectId>())).Returns((ObjectId x) => new Uri("urn:" + x));
+            resolver.Setup(x => x.Resolve(It.IsAny<ObjectId>()))
+                .Callback((ObjectId id) => _id = id);
 
             var nameCreator = new Mock<IFileNameCreator>();
-            nameCreator.Setup(m => m.CreateFileName()).Returns(fixture.Create<string>());
-
+            nameCreator.Setup(x => x.CreateFileName())
+                .Returns(fixture.Create<string>());
+            
             var sut = new MongoMessageDataRepository(resolver.Object, _bucket, nameCreator.Object);
             _expectedTtl = TimeSpan.FromHours(1);
 
-            using (var stream = new MemoryStream(_expected))
+            using (var stream = new MemoryStream(fixture.Create<byte[]>()))
             {
-                var uri = sut.Put(stream, _expectedTtl).GetAwaiter().GetResult();
-                _resultId = new ObjectId(uri.AbsoluteUri.Split(':').Last());
+                sut.Put(stream, _expectedTtl).GetAwaiter().GetResult();
             }
         }
-        
-        [Test]
-        public async Task ThenMessageStoredAsExpected()
-        {
-            var result = await _bucket.DownloadAsBytesAsync(_resultId);
-
-            Assert.That(result, Is.EqualTo(_expected));
-        }
-
+     
         [Test]
         public async Task ThenExpirationSetAsExpected()
         {
-            var cursor = await _bucket.FindAsync(Builders<GridFSFileInfo>.Filter.Eq("_id", _resultId));
+            var cursor = await _bucket.FindAsync(Builders<GridFSFileInfo>.Filter.Eq("_id", _id));
             var list = await cursor.ToListAsync();
             var doc = list.Single();
 
