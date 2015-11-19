@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\SystemDateTime.cs" />
     <Compile Include="IFileNameCreator.cs" />
     <Compile Include="IMongoMessageDataUriBuilder.cs" />
     <Compile Include="MongoMessageDataRepository.cs" />

@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using LiberisLabs.MassTransit.MessageData.MongoDb.Helpers;
 using MassTransit.MessageData;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -63,7 +64,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb
 
             if (timeToLive.HasValue)
             {
-                metadata["expiration"] = DateTime.UtcNow.Add(timeToLive.Value);
+                metadata["expiration"] = SystemDateTime.UtcNow.Add(timeToLive.Value);
             }
 
             return new GridFSUploadOptions

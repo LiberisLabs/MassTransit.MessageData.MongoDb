@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using LiberisLabs.MassTransit.MessageData.MongoDb.Helpers;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
@@ -11,18 +12,23 @@ using Ploeh.AutoFixture;
 
 namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepositoryTests
 {
+    [TestFixture]
     public class MongoMessageDataRepositoryTestsForPuttingMessageDataWithExpiration
     {
         private GridFSBucket _bucket;
         private byte[] _expected;
         private ObjectId _resultId;
         private TimeSpan _expectedTtl;
+        private DateTime _now;
 
         [TestFixtureSetUp]
         public void GivenAMongoMessageDataRepository_WhenPuttingMessageDataWithExpiration()
         {
             var db = new MongoClient().GetDatabase("messagedatastoretests");
             _bucket = new GridFSBucket(db);
+
+            _now = DateTime.UtcNow;
+            SystemDateTime.Set(_now);
 
             var fixture = new Fixture();
             _expected = fixture.Create<byte[]>();
@@ -59,13 +65,14 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
             var doc = list.Single();
 
             var expiration = doc.Metadata["expiration"].ToUniversalTime();
-            Assert.That(expiration, Is.LessThan(DateTime.UtcNow.Add(_expectedTtl)));
-            Assert.That(expiration, Is.GreaterThan(DateTime.UtcNow.Add(_expectedTtl.Add(TimeSpan.FromMinutes(-1)))));
+            Assert.That(expiration, Is.EqualTo(_now.Add(_expectedTtl)).Within(1).Milliseconds);
         }
 
         [TestFixtureTearDown]
         public void Kill()
         {
+            SystemDateTime.Reset();
+
             _bucket.DropAsync().GetAwaiter().GetResult();
         }
     }
