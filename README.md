@@ -15,12 +15,12 @@ PM> Install-Package MassTransit.MessageData.MongoDb
 
 Once we have the package installed, we can then use our favourite IoC container to wire up the MongoDb repository using one of the following constructor overloads:
 
-###MongoUrl
+###1. MongoUrl
 ```csharp
 var repo = new MongoMessageDataRepository(new MongoUrl("mongodb://localhost/masstransitTest"));
 ```
 
-###Connection String & Database
+###2. Connection String & Database
 ```csharp
 var repo = new MongoMessageDataRepository("mongodb://localhost", "masstransitTest");
 ```
