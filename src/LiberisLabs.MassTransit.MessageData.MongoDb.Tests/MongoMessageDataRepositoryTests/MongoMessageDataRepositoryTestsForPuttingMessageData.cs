@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -11,13 +10,16 @@ using Ploeh.AutoFixture;
 
 namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepositoryTests
 {
+    [TestFixture]
     public class MongoMessageDataRepositoryTestsForPuttingMessageData
     {
         private GridFSBucket _bucket;
-        private byte[] _expected;
-        private ObjectId _resultId;
+        private byte[] _expectedData;
         private Mock<IFileNameCreator> _nameCreator;
         private Mock<IMongoMessageUriResolver> _resolver;
+        private Uri _expectedUri;
+        private Uri _actualUri;
+        private string _filename;
 
         [TestFixtureSetUp]
         public void GivenAMongoMessageDataRepository_WhenPuttingMessageData()
@@ -26,40 +28,37 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
             _bucket = new GridFSBucket(db);
 
             var fixture = new Fixture();
-            _expected = fixture.Create<byte[]>();
+            _expectedData = fixture.Create<byte[]>();
+            _expectedUri = fixture.Create<Uri>();
 
             _resolver = new Mock<IMongoMessageUriResolver>();
-            _resolver.Setup(m => m.Resolve(It.IsAny<ObjectId>())).Returns((ObjectId x) => new Uri("urn:" + x));
+            _resolver.Setup(m => m.Resolve(It.IsAny<ObjectId>()))
+                .Returns((ObjectId x) => _expectedUri);
 
             _nameCreator = new Mock<IFileNameCreator>();
-            _nameCreator.Setup(m => m.CreateFileName()).Returns(fixture.Create<string>());
+            _filename = fixture.Create<string>();
+            _nameCreator.Setup(m => m.CreateFileName()).Returns(_filename);
 
             var sut = new MongoMessageDataRepository(_resolver.Object, _bucket, _nameCreator.Object);
 
-            using (var stream = new MemoryStream(_expected))
+            using (var stream = new MemoryStream(_expectedData))
             {
-                var uri = sut.Put(stream).GetAwaiter().GetResult();
-                _resultId = new ObjectId(uri.AbsoluteUri.Split(':').Last());
+                _actualUri = sut.Put(stream).GetAwaiter().GetResult();
             }
         }
 
         [Test]
-        public void ThenResolverCalled()
+        public void ThenTheCorrectUriIsReturned()
         {
-            _resolver.Verify(m => m.Resolve(_resultId));
+            Assert.That(_actualUri, Is.EqualTo(_expectedUri));
         }
-
-        public void ThenNameCreatorCalled()
-        {
-            _nameCreator.Verify(m => m.CreateFileName());
-        }
-
+        
         [Test]
         public async Task ThenMessageStoredAsExpected()
         {
-            var result = await _bucket.DownloadAsBytesAsync(_resultId);
+            var result = await _bucket.DownloadAsBytesByNameAsync(_filename);
 
-            Assert.That(result, Is.EqualTo(_expected));
+            Assert.That(result, Is.EqualTo(_expectedData));
         }
 
         [TestFixtureTearDown]
