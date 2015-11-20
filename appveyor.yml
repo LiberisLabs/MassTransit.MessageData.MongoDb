@@ -4,6 +4,9 @@
       - master
    
   version: 0.0.{build}
+  
+  install:
+    - ps : .\environment-install.ps1
 
   assembly_info:
     assembly_version: '{version}'
