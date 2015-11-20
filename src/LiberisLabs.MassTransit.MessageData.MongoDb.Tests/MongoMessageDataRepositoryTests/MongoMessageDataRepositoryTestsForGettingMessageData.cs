@@ -16,6 +16,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
         private Stream _result;
         private byte[] _expected;
         private Mock<IMongoMessageUriResolver> _resolver;
+        private Uri _uri;
 
         [TestFixtureSetUp]
         public void GivenAMongoMessageDataRepository_WhenGettingMessageData()
@@ -25,22 +26,23 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
 
             var fixture = new Fixture();
             _expected = fixture.Create<byte[]>();
+            _uri = fixture.Create<Uri>();
 
             var objectId = SeedBucket(_expected).GetAwaiter().GetResult();
             _resolver = new Mock<IMongoMessageUriResolver>();
-            _resolver.Setup(m => m.Resolve(It.IsAny<Uri>())).Returns(objectId);
+            _resolver.Setup(m => m.Resolve(_uri)).Returns(objectId);
 
             var nameCreator = new Mock<IFileNameCreator>();
             nameCreator.Setup(m => m.CreateFileName()).Returns(fixture.Create<string>());
 
             var sut = new MongoMessageDataRepository(_resolver.Object, _bucket, nameCreator.Object);
-            _result = sut.Get(It.IsAny<Uri>()).GetAwaiter().GetResult();
+            _result = sut.Get(_uri).GetAwaiter().GetResult();
         }
 
         [Test]
-        public void ThenResolverCalled()
+        public void ThenResolverCalledWithUri()
         {
-            _resolver.Verify(m => m.Resolve(It.IsAny<Uri>()));
+            _resolver.Verify(m => m.Resolve(_uri));
         }
 
         [Test]
