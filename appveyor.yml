@@ -3,7 +3,7 @@
     only:
       - master
    
-  version: 0.0.{build}-alpha
+  version: 0.0.{build}
 
   assembly_info:
     assembly_version: '{version}'
@@ -21,6 +21,9 @@
     parallel: true
     verbosity: normal
     publish_nuget: true
+	
+  nuget:
+    disable_publish_on_pr: true
 
   configuration: Release
    
