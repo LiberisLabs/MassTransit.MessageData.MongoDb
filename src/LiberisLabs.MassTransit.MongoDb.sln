@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiberisLabs.MassTransit.MessageData.MongoDb", "LiberisLabs.MassTransit.MessageData.MongoDb\LiberisLabs.MassTransit.MessageData.MongoDb.csproj", "{DBDD60B9-59DD-4838-A6E6-C0660C6E3D0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiberisLabs.MassTransit.MessageData.MongoDb.Tests", "LiberisLabs.MassTransit.MessageData.MongoDb.Tests\LiberisLabs.MassTransit.MessageData.MongoDb.Tests.csproj", "{FF537367-E747-4B95-9177-15CC86F175F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiberisLabs.MassTransit.MessageData.MongoDb.FunctionalTests", "LiberisLabs.MassTransit.MessageData.MongoDb.FunctionalTests\LiberisLabs.MassTransit.MessageData.MongoDb.FunctionalTests.csproj", "{BEE25D74-DB6B-4F87-99A1-E7403113B5FE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Stuff", "Stuff", "{2118B36B-465C-4418-A455-E75B8175077F}"
+	ProjectSection(SolutionItems) = preProject
+		..\liberis-labs.jpg = ..\liberis-labs.jpg
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{DFC97985-48B1-459B-A749-5F889A415D49}"
+	ProjectSection(SolutionItems) = preProject
+		..\appveyor.yml = ..\appveyor.yml
+		..\build-before_build.ps1 = ..\build-before_build.ps1
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DBDD60B9-59DD-4838-A6E6-C0660C6E3D0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBDD60B9-59DD-4838-A6E6-C0660C6E3D0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBDD60B9-59DD-4838-A6E6-C0660C6E3D0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBDD60B9-59DD-4838-A6E6-C0660C6E3D0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF537367-E747-4B95-9177-15CC86F175F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF537367-E747-4B95-9177-15CC86F175F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF537367-E747-4B95-9177-15CC86F175F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF537367-E747-4B95-9177-15CC86F175F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEE25D74-DB6B-4F87-99A1-E7403113B5FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEE25D74-DB6B-4F87-99A1-E7403113B5FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEE25D74-DB6B-4F87-99A1-E7403113B5FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEE25D74-DB6B-4F87-99A1-E7403113B5FE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

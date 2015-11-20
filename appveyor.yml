@@ -3,7 +3,10 @@
     only:
       - master
    
-  version: 0.0.1a
+  version: 1.0.0
+  
+  install:
+    - ps : .\environment-install.ps1
 
   assembly_info:
     assembly_version: '{version}'
@@ -22,12 +25,18 @@
     verbosity: normal
     publish_nuget: true
 
+  nuget:
+    disable_publish_on_pr: true
+
   configuration: Release
    
   cache:
     - packages -> **\packages.config
     - C:\downloads -> appveyor.yml
    
+  services:
+    - mongodb
+  
   test:
     assemblies:
       - '**\*.Tests.dll'
@@ -73,6 +82,9 @@
   cache:
     - packages -> **\packages.config
     - C:\downloads -> appveyor.yml
+   
+  services:
+    - mongodb
    
   test:
     assemblies:
