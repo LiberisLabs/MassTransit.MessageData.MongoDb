@@ -13,11 +13,9 @@
     patch: true
    
   os: Visual Studio 2015
-
-  init:
-    - ps : .\version-pull-request-on_init.ps1
  
   before_build:
+    - ps : .\version-pull-request-before_build.ps1
     - ps : .\build-before_build.ps1
 
   build:
