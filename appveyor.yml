@@ -15,7 +15,6 @@
   os: Visual Studio 2015
  
   before_build:
-    - ps : .\version-pull-request-before_build.ps1
     - ps : .\build-before_build.ps1
 
   build:
