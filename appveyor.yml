@@ -21,7 +21,7 @@
     parallel: true
     verbosity: normal
     publish_nuget: true
-	
+
   nuget:
     disable_publish_on_pr: true
 
