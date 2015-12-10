@@ -1,5 +1,5 @@
 (function() {
-	var docs = db.getMongo().getDB("docs");
+	var docs = db.getMongo().getDB("masstransit");
 	var now = new Date().toISOString();
 
 	var cursor = docs.fs.files.find({"metadata.expiration" : {$lte : new Date(now)}});
