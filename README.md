@@ -119,7 +119,7 @@ Expired GridFS data can be removed by running the following script:
 ```javascript
 // deleteExpiredMessageData.js
 
-var docs = db.getMongo().getDB("docs");
+var docs = db.getMongo().getDB("masstransit");
 var now = new Date().toISOString();
 
 var cursor = docs.fs.files.find({"metadata.expiration" : {$lte : new Date(now)}});
@@ -130,6 +130,8 @@ cursor.forEach(function (toDelete) {
 	docs.fs.files.remove({_id : id});
 });    
 ```
+
+Alternatively, you can import the `CreateDeleteExpiredMassTransitMessageDataTask.xml` file into Windows Task Scheduler and configure the script's arguments so that expired documents are deleted on a schedule.
 
 ## ToDo
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,12 +40,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb
         {
             var id = _mongoMessageUriResolver.Resolve(address);
 
-            var memoryStream = new MemoryStream();
-            await _gridFsBucket.DownloadToStreamAsync(id, memoryStream, null , cancellationToken)
-                .ConfigureAwait(false);
-
-            memoryStream.Position = 0;
-            return memoryStream;
+            return await _gridFsBucket.OpenDownloadStreamAsync(id, null, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<Uri> Put(Stream stream, TimeSpan? timeToLive = null, CancellationToken cancellationToken = new CancellationToken())
@@ -54,7 +48,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb
             var options = BuildGridFSUploadOptions(timeToLive);
 
             var id = await _gridFsBucket.UploadFromStreamAsync(_randomFileNameCreator.CreateFileName(), stream, options, cancellationToken)
-                .ConfigureAwait(false);
+                                        .ConfigureAwait(false);
 
             return _mongoMessageUriResolver.Resolve(id);
         }
