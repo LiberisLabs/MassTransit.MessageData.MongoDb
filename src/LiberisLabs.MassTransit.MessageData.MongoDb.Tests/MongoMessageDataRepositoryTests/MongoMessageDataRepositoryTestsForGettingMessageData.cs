@@ -18,7 +18,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
         private Mock<IMongoMessageUriResolver> _resolver;
         private Uri _uri;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void GivenAMongoMessageDataRepository_WhenGettingMessageData()
         {
             var db = new MongoClient().GetDatabase("messagedatastoretests");
@@ -53,7 +53,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
             Assert.That(result, Is.EqualTo(_expected));
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void Kill()
         {
             _bucket.DropAsync().GetAwaiter().GetResult();

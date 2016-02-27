@@ -16,7 +16,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.FunctionalTests.Tests
         private IBusControl _busControl;
         private byte[] _expectedBlob;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void GivenARunningBusThatIsListeningToABigTestMessageThatIsUsingMongoMessageDataRepository()
         {
             _busControl = global::MassTransit.Bus.Factory.CreateUsingInMemory(cfg =>
