@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
-using LiberisLabs.MassTransit.MessageData.MongoDb.FunctionalTests.Bus;
+using LiberisLabs.MassTransit.MessageData.MongoDb.FunctionalTests.Data;
 using NUnit.Framework;
 using MassTransit;
 
@@ -19,7 +19,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.FunctionalTests.Tests
         [OneTimeSetUp]
         public void GivenARunningBusThatIsListeningToABigTestMessageThatIsUsingMongoMessageDataRepository()
         {
-            _busControl = global::MassTransit.Bus.Factory.CreateUsingInMemory(cfg =>
+            _busControl = Bus.Factory.CreateUsingInMemory(cfg =>
             {
                 cfg.ReceiveEndpoint("test-" + new Guid().ToString(), ep =>
                 {
@@ -43,7 +43,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.FunctionalTests.Tests
                 111, 2, 234, 23, 23, 234, 235
             };
 
-            var bigTestMessage = new BigTestMessage()
+            var bigTestMessage = new BigTestMessage
             {
                 Blob = MessageDataRepository.Instance.PutBytes(_expectedBlob).Result
             };
