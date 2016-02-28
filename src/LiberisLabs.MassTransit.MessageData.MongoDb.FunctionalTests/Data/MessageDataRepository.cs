@@ -1,7 +1,7 @@
 ﻿using MassTransit.MessageData;
 using MongoDB.Driver;
 
-namespace LiberisLabs.MassTransit.MessageData.MongoDb.FunctionalTests.Bus
+namespace LiberisLabs.MassTransit.MessageData.MongoDb.FunctionalTests.Data
 {
     public static class MessageDataRepository
     {

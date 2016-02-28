@@ -20,7 +20,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
         private DateTime _now;
         private ObjectId _id;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void GivenAMongoMessageDataRepository_WhenPuttingMessageDataWithExpiration()
         {
             var db = new MongoClient().GetDatabase("messagedatastoretests");
@@ -59,7 +59,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
             Assert.That(expiration, Is.EqualTo(_now.Add(_expectedTtl)).Within(1).Milliseconds);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void Kill()
         {
             SystemDateTime.Reset();

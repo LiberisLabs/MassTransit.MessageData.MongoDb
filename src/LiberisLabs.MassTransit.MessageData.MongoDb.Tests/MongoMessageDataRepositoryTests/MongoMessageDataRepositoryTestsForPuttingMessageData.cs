@@ -22,7 +22,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
         private Uri _actualUri;
         private string _filename;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void GivenAMongoMessageDataRepository_WhenPuttingMessageData()
         {
             var db = new MongoClient().GetDatabase("messagedatastoretests");
@@ -72,7 +72,7 @@ namespace LiberisLabs.MassTransit.MessageData.MongoDb.Tests.MongoMessageDataRepo
             Assert.That(doc.Metadata.Contains("expiration"), Is.False);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void Kill()
         {
             _bucket.DropAsync().GetAwaiter().GetResult();
